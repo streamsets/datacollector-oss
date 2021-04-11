@@ -19,12 +19,14 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.event.client.impl.MovedDpmJerseyClientFilter;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.tunneling.TunnelingConstants;
 import com.streamsets.datacollector.tunneling.TunnelingRequest;
 import com.streamsets.datacollector.tunneling.TunnelingResponse;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.DpmClientInfo;
 import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+import org.apache.http.HttpStatus;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -37,6 +39,9 @@ import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,9 +55,11 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.Response;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +78,6 @@ public class WebSocketToRestDispatcher {
   static final String TUNNELING_CONNECT_ENDPOINT = "tunneling/rest/v1/connect";
   private static final String PER_MESSAGE_DEFLATE = "permessage-deflate";
   private static final String PING_MESSAGE = "ping";
-  private static final String ENGINE_ID_HEADER_NAME = "X-SS-Engine-Id";
   private final Configuration conf;
   private final RuntimeInfo runtimeInfo;
   private final SafeScheduledExecutorService executorService;
@@ -117,11 +123,15 @@ public class WebSocketToRestDispatcher {
   // if pingSch == true we do an HTTP call to SCH, so in case we get a MOVED, we update the URL before
   // establishing the tunnel.
   private boolean connectToControlHubTunnelingApp(boolean pingSch) {
-    try {
-      if (this.webSocketClient != null) {
+    if (this.webSocketClient != null) {
+      // Before reconnecting, close the existing connection if there is any
+      try {
         this.webSocketClient.stop();
+      } catch (Exception e) {
+        LOG.error(e.getMessage(), e);
       }
-
+    }
+    try {
       if (pingSch) {
         isTunnelingEnabled();
       }
@@ -134,12 +144,13 @@ public class WebSocketToRestDispatcher {
       ClientUpgradeRequest request = new ClientUpgradeRequest();
       request.addExtensions(ExtensionConfig.parse(PER_MESSAGE_DEFLATE)); // for message compression
       request.setHeader(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME);
-      request.setHeader(ENGINE_ID_HEADER_NAME, runtimeInfo.getId());
+      request.setHeader(TunnelingConstants.X_ENGINE_ID_HEADER_NAME, runtimeInfo.getId());
       for (Map.Entry<String, String> header : getDpmClientInfo().getHeaders().entrySet()) {
         request.setHeader(header.getKey(), header.getValue().trim());
       }
 
       this.webSocketClient = new WebSocketClient();
+      this.webSocketClient.getPolicy().setMaxBinaryMessageSize(TunnelingConstants.MAX_MESSAGE_SIZE_CONFIG_DEFAULT);
       this.webSocketClient.start();
       this.webSocketClient.connect(this, webSocketUri, request).get();
       return true;
@@ -163,8 +174,6 @@ public class WebSocketToRestDispatcher {
   @OnWebSocketError
   public void onError(Throwable cause) {
     LOG.error("onError: {}", cause.getMessage(), cause);
-    // Reconnect on Error
-    this.connectToControlHubTunnelingApp(true);
   }
 
   @OnWebSocketMessage
@@ -183,27 +192,30 @@ public class WebSocketToRestDispatcher {
           response = proxyRequest(tRequest);
           if (response != null) {
             Object data;
-
             String contentType = response.getHeaderString(HttpHeaders.CONTENT_TYPE);
-            if (contentType != null && contentType.contains(MediaType.TEXT_PLAIN)) {
-              data = response.readEntity(String.class);
-            } else {
-              data = response.readEntity(Object.class);
-            }
-
             Map<String, List<Object>> responseHeaders = new HashMap<>();
             for (String headerName : response.getHeaders().keySet()) {
               responseHeaders.put(headerName, response.getHeaders().get(headerName));
             }
-
             TunnelingResponse tResponse = new TunnelingResponse();
             tResponse.setId(tRequest.getId());
             tResponse.setStatus(response.getStatus());
-            tResponse.setPayload(data);
             tResponse.setHeaders(responseHeaders);
 
-            LOG.debug("Serving: {} {}, status: {}", tRequest.getMethod(), tRequest.getPath(), tResponse.getStatus());
+            try {
+              if (contentType != null && contentType.contains(MediaType.TEXT_PLAIN)) {
+                data = response.readEntity(String.class);
+              } else {
+                data = response.readEntity(Object.class);
+              }
+            } catch (Exception ex) {
+              LOG.error(ex.getMessage(), ex);
+              data = ex.getMessage();
+              tResponse.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+            }
 
+            tResponse.setPayload(data);
+            LOG.debug("Serving: {} {}, status: {}", tRequest.getMethod(), tRequest.getPath(), tResponse.getStatus());
             wsSession.getRemote()
                 .sendBytesByFuture(ByteBuffer.wrap(ObjectMapperFactory.get().writeValueAsBytes(tResponse)));
           }
@@ -213,7 +225,7 @@ public class WebSocketToRestDispatcher {
          }
         }
       }
-    } catch (IOException e) {
+    } catch (Exception e) {
       LOG.error(e.getMessage(), e);
     }
   }
@@ -229,17 +241,39 @@ public class WebSocketToRestDispatcher {
       url += "?" + request.getQueryString();
     }
 
-    Invocation.Builder builder = this.httpClient.target(url).request();
     MultivaluedHashMap<String, Object> multivaluedHashMap = new MultivaluedHashMap<>();
     for (Map.Entry<String, List<Object>> entry : request.getHeaders().entrySet()) {
       multivaluedHashMap.addAll(entry.getKey(), entry.getValue());
     }
-    builder.headers(multivaluedHashMap);
+    WebTarget webTarget = this.httpClient.target(url);
 
-    if (request.getPayload() != null) {
-      return builder.method(request.getMethod(), Entity.entity(request.getPayload(), request.getMediaType()));
+    if (request.getMediaType().equals(MediaType.MULTIPART_FORM_DATA) &&
+        request.getHeaders().containsKey(TunnelingConstants.X_UPLOADED_FILE_NAME) &&
+        request.getPayload() != null &&
+        request.getPayload() instanceof String
+    ) {
+      String fileName = (String) request.getHeaders().get(TunnelingConstants.X_UPLOADED_FILE_NAME).get(0);
+      byte[] uploadedFileBytes = Base64.getDecoder().decode((String)request.getPayload());
+      StreamDataBodyPart bodyPart = new StreamDataBodyPart(
+          "file",
+          new ByteArrayInputStream(uploadedFileBytes),
+          fileName
+      );
+      FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
+      final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.bodyPart(bodyPart);
+      return webTarget
+          .register(MultiPartFeature.class)
+          .request()
+          .headers(multivaluedHashMap)
+          .method(request.getMethod(), Entity.entity(multipart, multipart.getMediaType()));
+    } else if (request.getPayload() != null) {
+      return webTarget.request()
+          .headers(multivaluedHashMap)
+          .method(request.getMethod(), Entity.entity(request.getPayload(), request.getMediaType()));
     } else {
-      return builder.method(request.getMethod());
+      return webTarget.request()
+          .headers(multivaluedHashMap)
+          .method(request.getMethod());
     }
   }
 
@@ -250,6 +284,10 @@ public class WebSocketToRestDispatcher {
       } catch (IOException e) {
         LOG.error("Failed to send ping message: {}", e.getMessage(), e);
       }
+    } else {
+      LOG.warn("Failed to send a ping message to Control Hub Tunneling application, reason: Connection Not open. " +
+          "Invoking reconnect method to reopen the connection.");
+      this.connectToControlHubTunnelingApp(true);
     }
   }
 

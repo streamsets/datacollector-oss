@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.execution.alerts.TestWebhookNotifier;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.tunneling.TunnelingConstants;
 import com.streamsets.datacollector.tunneling.TunnelingRequest;
 import com.streamsets.datacollector.tunneling.TunnelingResponse;
 import com.streamsets.datacollector.util.Configuration;
@@ -36,9 +37,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Base64;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -58,6 +62,7 @@ public class TestWebSocketToRestDispatcher {
     handler.addServlet(new ServletHolder(mockTunnelingWebSocketServlet), "/" + TUNNELING_CONNECT_ENDPOINT);
     handler.addServlet(new ServletHolder(mockServlet), "/" + AVAILABLE_APPS_ENDPOINT);
     handler.addServlet(new ServletHolder(mockServlet), "/rest/v1/pipeline");
+    handler.addServlet(new ServletHolder(mockServlet), "/rest/v1/stageLibraries/extras/lib/upload");
 
     server = new Server(TestWebhookNotifier.getFreePort());
     server.setHandler(handler);
@@ -171,6 +176,31 @@ public class TestWebSocketToRestDispatcher {
       tRequest.setQueryString("?param1=value1");
       tRequest.setHeaders(ImmutableMap.of("mockHeader", Collections.singletonList("mockHeaderValue")));
       tRequest.setPayload(ObjectMapperFactory.get().writeValueAsBytes(ImmutableMap.of("pipelineId", "pipeline")));
+      wsServerSession.getRemote().sendBytes(ByteBuffer.wrap(ObjectMapperFactory.get().writeValueAsBytes(tRequest)));
+
+      Thread.sleep(1000);
+
+      tResponse = mockTunnelingWebSocketServlet.mockTunnelingWebSocket.lastMessage;
+      Assert.assertNotNull(tResponse);
+      Assert.assertEquals(200, tResponse.getStatus());
+      Assert.assertEquals(tRequest.getId(), tResponse.getId());
+      Assert.assertNotNull(tResponse.getPayload());
+
+      // Test MULTIPART_FORM_DATA POST
+      String fileEncodedString = Base64.getEncoder().encodeToString("Sample Data".getBytes());
+      Map<String, List<Object>> headers = ImmutableMap.of(
+          "mockHeader",
+          Collections.singletonList("mockHeaderValue"),
+          TunnelingConstants.X_UPLOADED_FILE_NAME,
+          Collections.singletonList("sample.txt")
+      );
+      tRequest = new TunnelingRequest();
+      tRequest.setId(UUID.randomUUID().toString());
+      tRequest.setMethod("POST");
+      tRequest.setMediaType(MediaType.MULTIPART_FORM_DATA);
+      tRequest.setPath("rest/v1/stageLibraries/extras/lib/upload");
+      tRequest.setHeaders(headers);
+      tRequest.setPayload(fileEncodedString);
       wsServerSession.getRemote().sendBytes(ByteBuffer.wrap(ObjectMapperFactory.get().writeValueAsBytes(tRequest)));
 
       Thread.sleep(1000);
