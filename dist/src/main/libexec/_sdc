@@ -383,6 +383,13 @@ run_bootstrap() {
     STREAMSETS_BOOTSTRAP_MAIN_CLASS="com.streamsets.engine.deployment.bootstrap.DeploymentBootstrapMain"
     STREAMSETS_BOOTSTRAP_JAVA_OPTS="-Dstreamsets.deployment.conf.dir=${SDC_CONF} -Dstreamsets.deployment.data.dir=${SDC_DATA} -Dstreamsets.deployment.stage.lib.dir=${STREAMSETS_LIBRARIES_DIR} ${STREAMSETS_BOOTSTRAP_JAVA_OPTS}"
     ${JAVA} ${STREAMSETS_BOOTSTRAP_JAVA_OPTS} -classpath "${STREAMSETS_DEPLOYMENT_LIB_EXTRACT_DIR}/deployment-lib/lib/*" ${STREAMSETS_BOOTSTRAP_MAIN_CLASS}
+    if [[ -f ${SDC_CONF}/deployment-java-opts.txt ]]; then
+      DEPLOYMENT_JAVA_OPTS=$(cat ${SDC_CONF}/deployment-java-opts.txt)
+      if [[ ! -z ${DEPLOYMENT_JAVA_OPTS} ]]; then
+        # Append Java options from the deployment it exists
+        SDC_JAVA_OPTS="${SDC_JAVA_OPTS} ${DEPLOYMENT_JAVA_OPTS}"
+      fi
+    fi
   else
     echo "Deployment Bootstrap Not triggered"
   fi
