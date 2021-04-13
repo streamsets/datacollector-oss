@@ -216,7 +216,9 @@ public class KafkaMultitopicRunnable implements Callable<Long> {
     List<Record> records = new ArrayList<>();
 
     if (payload == null) {
-      LOG.debug("NULL value (tombstone) read, it has been discarded");
+      Record record = getContext().createRecord(messageId);
+      record.set(Field.create(messageKey.toString()));
+      errorRecordHandler.onError(new OnRecordErrorException(record, KafkaErrors.KAFKA_74, messageId));
     } else {
 
       try (DataParser parser = parserFactory.getParser(messageId, payload)) {

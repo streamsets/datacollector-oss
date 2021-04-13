@@ -292,7 +292,9 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   ) throws StageException {
     List<Record> records = new ArrayList<>();
     if (payload == null) {
-      LOG.debug("NULL value (tombstone) read, it has been discarded");
+      Record record = getContext().createRecord(messageId);
+      record.set(Field.create(messageKey.toString()));
+      errorRecordHandler.onError(new OnRecordErrorException(record, KafkaErrors.KAFKA_74, messageId));
     } else {
 
       try (DataParser parser = Utils.checkNotNull(parserFactory, "Initialization failed").getParser(messageId, payload)) {

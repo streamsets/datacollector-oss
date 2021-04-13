@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.multikafka;
 import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
@@ -421,8 +422,9 @@ public class TestMultiKafkaSource {
     try {
       sourceRunner.waitOnProduce();
     } catch (Exception e) {
-      Throwable except = e.getCause().getCause();
-      throw e;
+      Throwable except = e.getCause().getCause().getCause();
+      Assert.assertEquals(OnRecordErrorException.class, except.getClass());
+      Assert.assertEquals(KafkaErrors.KAFKA_74, ((OnRecordErrorException) except).getErrorCode());
     } finally {
       sourceRunner.runDestroy();
     }
