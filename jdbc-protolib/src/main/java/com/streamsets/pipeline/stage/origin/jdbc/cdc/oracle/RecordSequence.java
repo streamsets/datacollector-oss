@@ -18,37 +18,63 @@ package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 class RecordSequence implements Serializable {
   final Map<String, String> headers;
   final String sqlString;
   final int seq;
+  final int opCode;
   final String rsId;
   final Object ssn;
-  final int opCode;
+  final String rowId;
   final LocalDateTime timestamp;
 
   RecordSequence(Map<String, String> headers, String sql, int seq, int opCode, String rsId, Object ssn,
-      LocalDateTime timestamp) {
+      String rowId, LocalDateTime timestamp) {
     this.headers = headers;
     this.sqlString = sql;
     this.seq = seq;
+    this.opCode = opCode;
     this.rsId = rsId;
     this.ssn = ssn;
-    this.opCode = opCode;
+    this.rowId = rowId;
     this.timestamp = timestamp;
   }
 
   @Override
   public boolean equals(Object o) {
-    return o != null
-        && o instanceof RecordSequence
-        && this.rsId.equals(((RecordSequence) o).rsId)
-        && this.ssn.equals(((RecordSequence) o).ssn);
+    if (o == null || !(o instanceof RecordSequence))
+      return false;
+    RecordSequence recordSequence = (RecordSequence) o;
+    if (this.rsId.equals(recordSequence.rsId) &&
+        this.ssn.equals(recordSequence.ssn)) {
+      if (this.rowId == null || recordSequence.rowId == null)
+        return false;
+      else
+        return this.rowId.equals(recordSequence.rowId);
+    } else {
+      return false;
+    }
   }
 
   @Override
   public int hashCode() {
     return rsId.hashCode() + ssn.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return "RecordSequence "
+        + "{"
+        + "headers=" + StringUtils.join(headers, " <> ") + " - "
+        + "sqlString=" + sqlString  + " - "
+        + "seq=" + seq  + " - "
+        + "opCode=" + opCode  + " - "
+        + "rsId=" + rsId  + " - "
+        + "ssn=" + ssn  + " - "
+        + "rowId=" + rowId  + " - "
+        + "timestamp=" + timestamp  + " - "
+        + '}';
   }
 }
