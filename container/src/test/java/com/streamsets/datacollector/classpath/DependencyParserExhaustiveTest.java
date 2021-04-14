@@ -190,6 +190,7 @@ public class DependencyParserExhaustiveTest {
       {"zookeeper-3.4.5-cdh5.10.1.jar", new Dependency("zookeeper", "3.4.5-cdh5.10.1")},
       {"zookeeper-3.4.6.2.4.2.0-258-tests.jar", new Dependency("zookeeper", "3.4.6.2.4.2.0-258")},
       {"orc-core-1.5.2-nohive.jar", new Dependency("orc", "1.5.2-nohive")},
+      {"eclipse-collections-api-11.0.0.M2.jar", new Dependency("eclipse-collections-api", "11.0.0.M2")}
     });
   }
 
