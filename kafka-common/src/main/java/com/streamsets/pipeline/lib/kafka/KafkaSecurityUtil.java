@@ -20,11 +20,8 @@ import com.streamsets.pipeline.lib.kafka.connection.KafkaSecurityConfig;
 import com.streamsets.pipeline.lib.kafka.connection.KafkaSecurityOptions;
 import com.streamsets.pipeline.lib.kafka.connection.SaslMechanisms;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -114,8 +111,15 @@ public class KafkaSecurityUtil {
         forbiddenProperties.add(SASL_MECHANISM);
       }
 
-      if (!(overrideConfigurations || Collections.disjoint(additionalProperties.keySet(), forbiddenProperties))) {
-        issues.add(context.createConfigIssue(configGroupName, configName, KafkaErrors.KAFKA_14));
+      forbiddenProperties.retainAll(additionalProperties.keySet());
+
+      if (!(overrideConfigurations || forbiddenProperties.isEmpty())) {
+        issues.add(context.createConfigIssue(
+            configGroupName,
+            configName,
+            KafkaErrors.KAFKA_14,
+            String.join(", ", forbiddenProperties)
+        ));
       }
     }
   }

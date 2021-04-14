@@ -34,7 +34,6 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -292,12 +291,14 @@ public class MultiKafkaBeanConfig {
           KafkaConstants.BASIC_AUTH_USER_INFO
       ));
     }
-    if (!Collections.disjoint(forbiddenProperties, kafkaOptions.keySet())) {
+    forbiddenProperties.retainAll(kafkaOptions.keySet());
+    if (!forbiddenProperties.isEmpty()) {
       issues.add(context.createConfigIssue(
           Groups.KAFKA.name(),
           KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
-          KafkaErrors.KAFKA_14)
-      );
+          KafkaErrors.KAFKA_14,
+          String.join(", ", forbiddenProperties)
+      ));
     }
   }
 }

@@ -50,7 +50,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -401,12 +400,14 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
           KafkaConstants.BASIC_AUTH_USER_INFO
       ));
     }
-    if (!Collections.disjoint(forbiddenProperties, additionalProperties.keySet())) {
+    forbiddenProperties.retainAll(additionalProperties.keySet());
+    if (!forbiddenProperties.isEmpty()) {
       issues.add(getContext().createConfigIssue(
           KafkaOriginGroups.KAFKA.name(),
           KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
-          KafkaErrors.KAFKA_14)
-      );
+          KafkaErrors.KAFKA_14,
+          String.join(", ", forbiddenProperties)
+      ));
     }
   }
 }

@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ErrorListener;
@@ -37,8 +36,9 @@ import com.streamsets.pipeline.stage.origin.kafka.KafkaConfigBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -196,18 +196,20 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
 
   @Override
   protected void validateAdditionalProperties(Map<String, String> additionalProperties, List<Stage.ConfigIssue> issues) {
-    Set<String> forbiddenProperties = ImmutableSet.of(
+    Set<String> forbiddenProperties = new HashSet<>(Arrays.asList(
         BROKER_LIST,
         ZOOKEEPER_CONNECT,
         TOPIC,
         CONSUMER_GROUP
-    );
-    if (!conf.overrideConfigurations && !Collections.disjoint(forbiddenProperties, additionalProperties.keySet())) {
+    ));
+    forbiddenProperties.retainAll(additionalProperties.keySet());
+    if (!(conf.overrideConfigurations || forbiddenProperties.isEmpty())) {
       issues.add(getContext().createConfigIssue(
           KafkaOriginGroups.KAFKA.name(),
           KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
-          KafkaErrors.KAFKA_14)
-      );
+          KafkaErrors.KAFKA_14,
+          String.join(", ", forbiddenProperties)
+      ));
     }
   }
 

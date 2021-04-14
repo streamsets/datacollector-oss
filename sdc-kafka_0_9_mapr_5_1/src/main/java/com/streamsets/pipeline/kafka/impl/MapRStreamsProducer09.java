@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.kafka.impl;
 
 
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
@@ -30,7 +29,8 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -131,17 +131,19 @@ public class MapRStreamsProducer09 extends BaseKafkaProducer09 {
   }
 
   private void validateAdditionalProperties(List<Stage.ConfigIssue> issues, Stage.Context context) {
-    Set<String> forbiddenProperties = ImmutableSet.of(
+    Set<String> forbiddenProperties = new HashSet<>(Arrays.asList(
         KafkaConstants.KEY_SERIALIZER_CLASS_CONFIG,
         KafkaConstants.VALUE_SERIALIZER_CLASS_CONFIG,
         ProducerConfig.PARTITIONER_CLASS_CONFIG
-    );
-    if (!(overrideConfigurations || Collections.disjoint(forbiddenProperties, kafkaProducerConfigs.keySet()))) {
+    ));
+    forbiddenProperties.retainAll(kafkaProducerConfigs.keySet());
+    if (!(overrideConfigurations || forbiddenProperties.isEmpty())) {
       issues.add(context.createConfigIssue(
           KafkaDestinationGroups.KAFKA.name(),
           KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
-          KafkaErrors.KAFKA_14)
-      );
+          KafkaErrors.KAFKA_14,
+          String.join(", ", forbiddenProperties)
+      ));
     }
   }
 }

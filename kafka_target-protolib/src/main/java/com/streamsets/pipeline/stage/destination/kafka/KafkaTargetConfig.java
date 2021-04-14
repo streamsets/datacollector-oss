@@ -52,7 +52,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -880,12 +879,14 @@ public class KafkaTargetConfig {
           KafkaConstants.BASIC_AUTH_CREDENTIAL_SOURCE
       ));
     }
-    if (!Collections.disjoint(forbiddenProperties, kafkaProducerConfigs.keySet())) {
+    forbiddenProperties.retainAll(kafkaProducerConfigs.keySet());
+    if (!forbiddenProperties.isEmpty()) {
       issues.add(context.createConfigIssue(
           KafkaDestinationGroups.KAFKA.name(),
           KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
-          KafkaErrors.KAFKA_14)
-      );
+          KafkaErrors.KAFKA_14,
+          String.join(", ", forbiddenProperties)
+      ));
     }
   }
 
