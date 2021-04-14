@@ -580,7 +580,10 @@ public class OracleCDCSource extends BaseSource {
               if (useLocalBuffering &&
                   bufferedRecords.containsKey(key) &&
                   bufferedRecords.get(key).contains(new RecordSequence(null, null, 0, 0,
-                      logMnrRecord.getRsId(), logMnrRecord.getSsn(), null))) {
+                      logMnrRecord.getRsId(), logMnrRecord.getSsn(), logMnrRecord.getRowId(), null))) {
+                if (LOG.isDebugEnabled()) {
+                  LOG.debug("Discarding LogMiner entry as it is already buffered: {}", logMnrRecord.toString());
+                }
                 continue;
               }
               if (LOG.isDebugEnabled()) {
@@ -831,7 +834,7 @@ public class OracleCDCSource extends BaseSource {
 
       int nextSeq = records.isEmpty() ? 1 : records.tail().seq + 1;
       RecordSequence node = new RecordSequence(attributes, sqlRedo, nextSeq, logMnrRecord.getOperationCode(),
-          logMnrRecord.getRsId(), logMnrRecord.getSsn(), logMnrRecord.getLocalDateTime());
+          logMnrRecord.getRsId(), logMnrRecord.getSsn(), logMnrRecord.getRowId(), logMnrRecord.getLocalDateTime());
 
       // Check for SAVEPOINT/ROLLBACK.
       // When we get a record with the ROLLBACK indicator set, we go through all records in the transaction,

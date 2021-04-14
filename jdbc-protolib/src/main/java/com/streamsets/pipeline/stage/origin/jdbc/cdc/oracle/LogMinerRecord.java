@@ -155,4 +155,29 @@ public class LogMinerRecord {
   public boolean isEndOfRecord() {
     return endOfRecord;
   }
+
+  @Override
+  public String toString() {
+    return "LogMinerRecord "
+        + "{"
+        + "rollback=" + rollback + " - "
+        + "endOfRecord=" + endOfRecord + " - "
+        + "xidusn=" + xidusn + " - "
+        + "xidslt=" + xidslt + " - "
+        + "xidsqn=" + xidsqn + " - "
+        + "scn=" + scn + " - "
+        + "commitSCN=" + commitSCN + " - "
+        + "sequence=" + sequence + " - "
+        + "ssn=" + ssn + " - "
+        + "rsId=" + rsId + " - "
+        + "operationCode=" + operationCode + " - "
+        + "rowId=" + rowId + " - "
+        + "timestamp=" + timestamp + " - "
+        + "localDateTime=" + localDateTime + " - "
+        + "segOwner=" + segOwner + " - "
+        + "tableName=" + tableName + " - "
+        + "userName=" + userName + " - "
+        + "sqlRedo=" + sqlRedo + " - "
+        + "}";
+  }
 }
