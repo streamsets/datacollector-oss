@@ -359,7 +359,9 @@ public class HttpProcessor extends SingleLaneProcessor {
 
           completeRequest(record, future);
 
-          if (conf.pagination.mode != PaginationMode.NONE && !appliedRetryAction && !renewedToken) {
+          if (conf.pagination.mode != PaginationMode.NONE &&
+              conf.multipleValuesBehavior != MultipleValuesBehavior.FIRST_ONLY &&
+              !appliedRetryAction && !renewedToken) {
             Record recordResp = recordsResponse.get(0);
             String resultFieldPath = conf.pagination.keepAllFields ? conf.pagination.resultFieldPath : "";
             List listResponse = (List) recordResp.get(resultFieldPath).getValue();
@@ -426,21 +428,24 @@ public class HttpProcessor extends SingleLaneProcessor {
             haveMorePages
     );
     boolean isLink = conf.pagination.mode == PaginationMode.BY_PAGE ||
-            conf.pagination.mode == PaginationMode.BY_OFFSET
-    ;
+            conf.pagination.mode == PaginationMode.BY_OFFSET;
 
     HttpResponseActionConfigBean action = statusToActionConfigs.get(responseState.lastStatus);
     boolean numRetriesExceed = action != null && responseState.retryCount > action.getMaxNumRetries();
+
+    boolean canPaginate = (conf.pagination.mode != PaginationMode.NONE &&
+        conf.multipleValuesBehavior != MultipleValuesBehavior.FIRST_ONLY &&
+        (thereIsNextLink || isLink));
+    boolean canContinue = canPaginate || (action != null);
+
     return (waitTimeNotExp &&
         uninterrupted &&
         !lastRequestTimedOut &&
         !close &&
-        conf.multipleValuesBehavior != MultipleValuesBehavior.FIRST_ONLY &&
-        (thereIsNextLink || isLink || appliedRetryAction) &&
-        !numRetriesExceed)
-        || renewedToken;
+        canContinue &&
+        !numRetriesExceed) ||
+        renewedToken;
   }
-
 
   /**
    * Sets the startAt EL variable in scope for the resource and request body.
