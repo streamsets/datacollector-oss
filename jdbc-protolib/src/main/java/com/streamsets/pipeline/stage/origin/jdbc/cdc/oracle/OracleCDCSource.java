@@ -161,6 +161,9 @@ public class OracleCDCSource extends BaseSource {
   private static final String TIMESTAMP_HEADER = PREFIX + "timestamp";
   private static final String TABLE = PREFIX + "table";
   private static final String ROWID_KEY = PREFIX + "rowId";
+  private static final String REDO_VALUE = PREFIX + "redoValue";
+  private static final String UNDO_VALUE = PREFIX + "undoValue";
+  private static final String PRECISION_TIMESTAMP = PREFIX + "precisionTimestamp";
   private static final String QUERY_KEY = PREFIX + "query";
   private static final String NULL = "NULL";
   private static final String OFFSET_VERSION_STR = "v2";
@@ -931,6 +934,9 @@ public class OracleCDCSource extends BaseSource {
     attributes.put(SCHEMA, record.getSegOwner());
     attributes.put(ROLLBACK, String.valueOf(record.getRollback()));
     attributes.put(ROWID_KEY, record.getRowId());
+    attributes.put(record.getRedoValue() == null ? "-1" : REDO_VALUE, record.getRedoValue().toPlainString());
+    attributes.put(record.getUndoValue() == null ? "-1" : UNDO_VALUE, record.getUndoValue().toPlainString());
+    attributes.put(PRECISION_TIMESTAMP, record.getPrecisionTimestamp().toString());
 
     if (configBean.keepOriginalQuery) {
       attributes.put(QUERY_KEY, sqlRedo);

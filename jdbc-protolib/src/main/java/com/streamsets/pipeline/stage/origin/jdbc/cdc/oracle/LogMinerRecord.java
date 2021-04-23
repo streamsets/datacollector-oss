@@ -40,6 +40,9 @@ public class LogMinerRecord {
   private final int rollback;
   private final String rowId;
   private final boolean endOfRecord;
+  private final BigDecimal redoValue;
+  private final BigDecimal undoValue;
+  private final Timestamp precisionTimestamp;
 
   public LogMinerRecord(
       BigDecimal scn,
@@ -58,7 +61,10 @@ public class LogMinerRecord {
       String segOwner,
       int rollback,
       String rowId,
-      boolean endOfRecord
+      boolean endOfRecord,
+      BigDecimal redoValue,
+      BigDecimal undoValue,
+      Timestamp precisionTimestamp
   ) {
     this.scn = scn;
     this.userName = userName;
@@ -78,6 +84,9 @@ public class LogMinerRecord {
     this.rollback = rollback;
     this.rowId = rowId;
     this.endOfRecord = endOfRecord;
+    this.redoValue = redoValue;
+    this.undoValue = undoValue;
+    this.precisionTimestamp = precisionTimestamp;
   }
 
   public BigDecimal getScn() {
@@ -156,6 +165,12 @@ public class LogMinerRecord {
     return endOfRecord;
   }
 
+  public BigDecimal getRedoValue() { return redoValue; }
+
+  public BigDecimal getUndoValue() { return undoValue; }
+
+  public Timestamp getPrecisionTimestamp() { return precisionTimestamp; }
+
   @Override
   public String toString() {
     return "LogMinerRecord "
@@ -178,6 +193,9 @@ public class LogMinerRecord {
         + "tableName=" + tableName + " - "
         + "userName=" + userName + " - "
         + "sqlRedo=" + sqlRedo + " - "
+        + "redoValue=" + redoValue + " - "
+        + "undoValue=" + undoValue + " - "
+        + "precisionTimestamp=" + precisionTimestamp + " - "
         + "}";
   }
 }

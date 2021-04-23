@@ -93,7 +93,7 @@ public class LogMinerSession {
   // where conditions.
   private static final String SELECT_LOGMNR_CONTENT_QUERY =
       "SELECT SCN, USERNAME, OPERATION_CODE, TIMESTAMP, SQL_REDO, TABLE_NAME, {}, SEQUENCE#, CSF,"
-      + " XIDUSN, XIDSLT, XIDSQN, RS_ID, SSN, SEG_OWNER, ROLLBACK, ROW_ID "
+      + " XIDUSN, XIDSLT, XIDSQN, RS_ID, SSN, SEG_OWNER, ROLLBACK, ROW_ID, REDO_VALUE, UNDO_VALUE "
       + " FROM V$LOGMNR_CONTENTS "
       + " WHERE {}";
   private static final String COMMIT_SCN_COLUMN = "COMMIT_SCN";

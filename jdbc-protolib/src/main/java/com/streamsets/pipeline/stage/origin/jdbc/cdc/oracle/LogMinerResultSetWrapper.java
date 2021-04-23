@@ -41,6 +41,8 @@ public class LogMinerResultSetWrapper {
   private static final String SEG_OWNER_COLUMN = "SEG_OWNER";
   private static final String ROLLBACK_COLUMN = "ROLLBACK";
   private static final String ROW_ID_COLUMN = "ROW_ID";
+  private static final String REDO_VALUE = "REDO_VALUE";
+  private static final String UNDO_VALUE = "UNDO_VALUE";
 
   private ResultSet resultSet;
   private int databaseVersion;
@@ -97,7 +99,10 @@ public class LogMinerResultSetWrapper {
         resultSet.getString(SEG_OWNER_COLUMN),
         resultSet.getInt(ROLLBACK_COLUMN),
         resultSet.getString(ROW_ID_COLUMN),
-        resultSet.getInt(CSF_COLUMN) != 1
+        resultSet.getInt(CSF_COLUMN) != 1,
+        resultSet.getBigDecimal(REDO_VALUE),
+        resultSet.getBigDecimal(UNDO_VALUE),
+        resultSet.getTimestamp(TIMESTAMP_COLUMN)
     );
   }
 }
