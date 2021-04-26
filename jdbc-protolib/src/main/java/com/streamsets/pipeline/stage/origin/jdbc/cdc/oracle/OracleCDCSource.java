@@ -164,6 +164,8 @@ public class OracleCDCSource extends BaseSource {
   private static final String REDO_VALUE = PREFIX + "redoValue";
   private static final String UNDO_VALUE = PREFIX + "undoValue";
   private static final String PRECISION_TIMESTAMP = PREFIX + "precisionTimestamp";
+  private static final String ORACLE_SEQUENCE = PREFIX + "sequence.oracle";
+  private static final String INTERNAL_SEQUENCE = PREFIX + "sequence.internal";
   private static final String QUERY_KEY = PREFIX + "query";
   private static final String NULL = "NULL";
   private static final String OFFSET_VERSION_STR = "v2";
@@ -937,6 +939,7 @@ public class OracleCDCSource extends BaseSource {
     attributes.put(record.getRedoValue() == null ? "-1" : REDO_VALUE, record.getRedoValue().toPlainString());
     attributes.put(record.getUndoValue() == null ? "-1" : UNDO_VALUE, record.getUndoValue().toPlainString());
     attributes.put(PRECISION_TIMESTAMP, record.getPrecisionTimestamp().toString());
+    attributes.put(ORACLE_SEQUENCE, "" + record.getSequence());
 
     if (configBean.keepOriginalQuery) {
       attributes.put(QUERY_KEY, sqlRedo);
@@ -1211,11 +1214,14 @@ public class OracleCDCSource extends BaseSource {
       bufferedRecordsLock.unlock();
     }
     final List<FutureWrapper> parseFutures = new ArrayList<>();
+    int sequence = 0;
     while (!records.isEmpty()) {
       RecordSequence r = records.remove();
       if (configBean.keepOriginalQuery) {
         r.headers.put(QUERY_KEY, r.sqlString);
       }
+      r.headers.put(INTERNAL_SEQUENCE, "" + sequence);
+      sequence++;
       final Future<Record> recordFuture = parsingExecutor.submit(() -> generateRecord(r.sqlString, r.headers, r.opCode));
       parseFutures.add(new FutureWrapper(recordFuture, r.sqlString, r.seq));
     }
@@ -1290,6 +1296,7 @@ public class OracleCDCSource extends BaseSource {
     }
 
     final List<FutureWrapper> parseFutures = new LinkedList<>();
+    int sequence = 0;
     while (!records.isEmpty()) {
       parseFutures.clear();
 
@@ -1307,6 +1314,9 @@ public class OracleCDCSource extends BaseSource {
           );
           continue;
         }
+
+        r.headers.put(INTERNAL_SEQUENCE, "" + sequence);
+        sequence++;
 
         if (configBean.keepOriginalQuery) {
           r.headers.put(QUERY_KEY, r.sqlString);
