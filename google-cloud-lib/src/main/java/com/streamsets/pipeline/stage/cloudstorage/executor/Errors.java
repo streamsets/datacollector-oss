@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2021 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.streamsets.pipeline.stage.cloudstorage.executor;
 
-package com.streamsets.pipeline.stage.cloudstorage.origin;
-
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum Groups implements Label {
-  GCS("GCS"),
-  DATA_FORMAT("Data Format"),
-  CREDENTIALS("CREDENTIALS"),
-  ERROR_HANDLING("Error Handling"),
-  POST_PROCESSING("Post Processing");
+public enum Errors implements ErrorCode {
+  GCP_EXECUTOR_0000("Error: {}"),
+  GCP_EXECUTOR_0001("Invalid EL Expression"),
+  GCP_EXECUTOR_0002("Can't evaluate EL: {}"),
+  GCP_EXECUTOR_0003("Bucket can't be empty"),
+  GCP_EXECUTOR_0004("Object key can't be empty"),
+  ;
 
-  private final String label;
+  private final String msg;
 
-  private Groups(String label) {
-    this.label = label;
+  Errors(String msg) {
+    this.msg = msg;
   }
 
   @Override
-  public String getLabel() {
-    return label;
+  public String getCode() {
+    return name();
+  }
+
+  @Override
+  public String getMessage() {
+    return msg;
   }
 }
