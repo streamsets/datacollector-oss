@@ -76,6 +76,7 @@ public class GoogleCloudStorageSource extends BaseSource {
   private long noMoreDataFileCount;
   private Blob blob = null;
   private GcsObjectPostProcessingHandler errorBlobHandler;
+  private GcsObjectPostProcessingHandler postProcessingBlobHandler;
   private boolean checkBatchSize = true;
 
   GoogleCloudStorageSource(GCSOriginConfig gcsOriginConfig) {
@@ -116,7 +117,8 @@ public class GoogleCloudStorageSource extends BaseSource {
 
     rateLimitElEval = FileRefUtil.createElEvalForRateLimit(getContext());
     rateLimitElVars = getContext().createELVars();
-    errorBlobHandler = new GcsObjectPostProcessingHandler(storage, gcsOriginConfig.gcsOriginErrorConfig);
+    errorBlobHandler = new GcsObjectPostProcessingHandler(storage, gcsOriginConfig.gcsOriginErrorConfig.toPostProcessingConfig());
+    postProcessingBlobHandler = new GcsObjectPostProcessingHandler(storage, gcsOriginConfig.postProcessingConfig);
     return issues;
   }
 
@@ -145,6 +147,9 @@ public class GoogleCloudStorageSource extends BaseSource {
     if (parser == null) {
       //Get next eligible blob to read, if none throw no more data event
       do {
+        if (blob != null) {
+          postProcessingBlobHandler.handle(blob.getBlobId());
+        }
         blob = minMaxPriorityQueue.pollFirst();
         //We don't have any spooled files to read from and we don't have anything available from the existing parser
         //(in case of sdc restart with stored offset, we still want some blob to be available for us to start reading)
@@ -239,7 +244,7 @@ public class GoogleCloudStorageSource extends BaseSource {
       fileOffset = END_FILE_OFFSET;
       noMoreDataErrorCount++;
       try {
-        errorBlobHandler.handleError(blob.getBlobId());
+        errorBlobHandler.handle(blob.getBlobId());
       } catch (StorageException se) {
         LOG.error("Error handling failed for {}. Reason{}", blobGeneratedId, e);
         getContext().reportError(Errors.GCS_06, blobGeneratedId, se);
