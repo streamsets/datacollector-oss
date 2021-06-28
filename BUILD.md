@@ -59,23 +59,23 @@ are published to public maven repositories and for them this step can be skipped
 
 - You can do that by getting the latest code from Github
 
-  `git clone http://github.com/streamsets/datacollector-api`
+  `git clone http://github.com/streamsets/datacollector-api-oss`
 
   and
 
-  `git clone http://github.com/streamsets/datacollector-plugin-api`
+  `git clone http://github.com/streamsets/datacollector-plugin-api-oss`
 
 - And install each of these to your local maven repository
 
   `mvn clean install -DskipTests`
 
-You also need the artifacts for datacollector-edge installed into your local maven repository.
+You also need the artifacts for datacollector-edge-oss installed into your local maven repository.
 
-- Ensure you have the [prerequisites listed for building datacollector-edge](https://github.com/streamsets/datacollector-edge/blob/master/BUILD.md#minimum-requirements)
+- Ensure you have the [prerequisites listed for building datacollector-edge-oss](https://github.com/streamsets/datacollector-edge-oss/blob/master/BUILD.md#minimum-requirements)
 
-- Get the latest version of datacollector-edge from Github
+- Get the latest version of datacollector-edge-oss from Github
 
-  `git clone https://github.com/streamsets/datacollector-edge.git`
+  `git clone https://github.com/streamsets/datacollector-edge-oss.git`
 
 - Gradle is used in this project as a build tool, so in order to install it to your local maven repository execute:
 
@@ -83,7 +83,7 @@ You also need the artifacts for datacollector-edge installed into your local mav
 
 Finally, get the latest Data Collector code from Github
 
-`git clone http://github.com/streamsets/datacollector`
+`git clone http://github.com/streamsets/datacollector-oss`
 
 ## Development build
 
