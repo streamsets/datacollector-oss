@@ -37,7 +37,3 @@ Getting Help
 ------------
 
 A good place to start is to check out [http://streamsets.com/community](http://streamsets.com/community). You can also various [support options](http://streamsets.com/support).
-
-Contributing Code
------------
-We welcome contributors, please check out our [guidelines](CONTRIBUTING.md) to get started.
