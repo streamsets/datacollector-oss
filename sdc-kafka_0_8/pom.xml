@@ -61,13 +61,13 @@
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-kafka-common</artifactId>
-      <version>${project.version}</version>
-      <type>test-jar</type>
-      <scope>compile</scope>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.streamsets</groupId>-->
+<!--      <artifactId>streamsets-datacollector-kafka-common</artifactId>-->
+<!--      <version>${project.version}</version>-->
+<!--      <type>test-jar</type>-->
+<!--      <scope>compile</scope>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>

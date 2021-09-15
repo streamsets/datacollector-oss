@@ -15,6 +15,8 @@
  */
 package com.streamsets.pipeline.stage.origin.multikafka;
 
+import java.util.regex.Pattern;
+
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
@@ -31,6 +33,8 @@ public interface MultiSdcKafkaConsumer<K, V> {
 
   void subscribe(List<String> topics);
 
+  void subscribe(Pattern var1);
+
   ConsumerRecords<K, V> poll(long timeout);
 
   void unsubscribe();
@@ -38,4 +42,5 @@ public interface MultiSdcKafkaConsumer<K, V> {
   void close();
 
   void commitSync(Map<TopicPartition, OffsetAndMetadata> offsetsMap);
+
 }

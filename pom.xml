@@ -92,8 +92,10 @@
     <wholefile-transformer-lib>wholefile-transformer-lib</wholefile-transformer-lib>
     <windows-lib>windows-lib</windows-lib>
     <rootProject>true</rootProject>
-    <datacollector-api.version>3.23.0-SNAPSHOT</datacollector-api.version>
-    <datacollector-spark-api.version>3.23.0-SNAPSHOT</datacollector-spark-api.version>
+    <datacollector-api.version>3.22.3</datacollector-api.version>
+    <!--<datacollector-api.version>3.23.0-SNAPSHOT</datacollector-api.version>-->
+    <!--<datacollector-spark-api.version>3.23.0-SNAPSHOT</datacollector-spark-api.version>-->
+    <datacollector-spark-api.version>3.22.3</datacollector-spark-api.version>
     <thycotic-credentialstore-lib>thycotic-credentialstore-lib</thycotic-credentialstore-lib>
   </properties>
 
@@ -248,7 +250,7 @@
     <module>scripting-protolib</module>
     <module>wholefile-converter-protolib</module>
     <module>emr-protolib</module>
-    <module>databricks-ml-protolib</module>
+<!--    <module>databricks-ml-protolib</module>-->
 
     <!--
          Stage libraries that always built with the data collector (they dont have protolibs)

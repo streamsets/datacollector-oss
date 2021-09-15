@@ -75,14 +75,40 @@ public class MultiKafkaBeanConfig {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Topic Name Match Exactly",
+      description = "Whether use topic regex pattern",
+      displayPosition = 21,
+      group = "KAFKA"
+  )
+  public boolean notUsingPattern;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.LIST,
       defaultValue = "[\"myTopic\"]",
       label = "Topic List",
       description = "List of topics to consume",
+      dependsOn = "notUsingPattern",
+      triggeredByValue = {"true"},
       displayPosition = 30,
       group = "KAFKA"
   )
   public List<String> topicList = new ArrayList<>();
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "Topic Pattern",
+      description = "Topic Pattern using regular expression, ",
+      dependsOn = "notUsingPattern",
+      triggeredByValue = {"false"},
+      displayPosition = 40,
+      group = "KAFKA"
+  )
+  public String topicPattern;
 
   @ConfigDef(
       required = true,
