@@ -115,12 +115,20 @@ public class MultiKafkaSource extends BasePushSource {
     }
 
     executor = Executors.newFixedThreadPool(getNumberOfThreads());
-    for (String topic : conf.topicList) {
-      LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
+    if (conf.notUsingPattern) {
+      for (String topic : conf.topicList) {
+        LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
+        event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.KAFKA.name());
+        event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, topic);
+        event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.connectionConfig.connection.metadataBrokerList);
+        getContext().publishLineageEvent(event);
+      }
+    } else {
+      LineageEvent event = (getContext()).createLineageEvent(LineageEventType.ENTITY_READ);
       event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.KAFKA.name());
-      event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, topic);
+      event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, this.conf.topicPattern);
       event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.connectionConfig.connection.metadataBrokerList);
-      getContext().publishLineageEvent(event);
+      (getContext()).publishLineageEvent(event);
     }
     return issues;
   }

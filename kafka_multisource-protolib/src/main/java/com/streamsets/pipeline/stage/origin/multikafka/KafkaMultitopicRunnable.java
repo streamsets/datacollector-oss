@@ -31,6 +31,9 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
+
+import java.util.regex.Pattern;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
@@ -55,6 +58,7 @@ public class KafkaMultitopicRunnable implements Callable<Long> {
   private final MultiSdcKafkaConsumer<String, byte[]> consumer;
   private final long threadID;
   private final List<String> topicList;
+  private final Pattern pattern;
   private final CountDownLatch startProcessingGate;
   private final PushSource.Context context;
   private final DataParserFactory parserFactory;
@@ -75,6 +79,11 @@ public class KafkaMultitopicRunnable implements Callable<Long> {
     this.consumer = consumer;
     this.threadID = threadID;
     this.topicList = conf.topicList;
+    if (!conf.notUsingPattern) {
+      this.pattern = Pattern.compile(conf.topicPattern);
+    } else {
+      this.pattern = null;
+    }
     this.startProcessingGate = startProcessingGate;
     this.context = context;
     this.parserFactory = parserFactory;
@@ -101,7 +110,11 @@ public class KafkaMultitopicRunnable implements Callable<Long> {
     LOG.info("Minimum Kafka consumer Poll interval is set to: {}", MIN_CONSUMER_POLLING_INTERVAL_MS);
 
     try {
-      consumer.subscribe(topicList);
+      if (this.pattern != null) {
+        consumer.subscribe(this.pattern);
+      } else {
+        consumer.subscribe(topicList);
+      }
       // protected loop. want it to finish completely, or not start at all.
       // only 2 conditions that we want to halt execution. must handle gracefully
 

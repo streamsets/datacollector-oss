@@ -19,9 +19,13 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.stage.origin.multikafka.MultiSdcKafkaConsumer;
+
+import java.util.regex.Pattern;
+
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
+import org.apache.kafka.clients.consumer.internals.NoOpConsumerRebalanceListener;
 import org.apache.kafka.common.TopicPartition;
 
 import java.util.Iterator;
@@ -74,6 +78,11 @@ public class MockKafkaConsumerLoader extends KafkaConsumerLoader {
     @Override
     public void subscribe(List topics) {
       delegate.subscribe(topics);
+    }
+
+    @Override
+    public void subscribe(Pattern pattern) {
+      delegate.subscribe(pattern, new NoOpConsumerRebalanceListener());
     }
 
     @Override
